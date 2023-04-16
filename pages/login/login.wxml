@@ -1,0 +1,9 @@
+<view class="loading-container-flex">
+  <t-loading
+    theme="dots"
+    size="160rpx"
+    text="正在认证"
+    layout="vertical"
+    t-class-indicator="indicator-black"
+  ></t-loading>
+</view>

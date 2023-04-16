@@ -1,0 +1,16 @@
+.loading-container-flex {
+  width: 750rpx;
+  height: 600rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.indicator-black {
+  color: #4676fa !important;
+}
+
+.loading-container-flex t-loading {
+  min-width: 20%;
+  margin-right: 40rpx;
+}
