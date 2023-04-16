@@ -4,37 +4,22 @@ import Toast from 'tdesign-miniprogram/toast/index';
 const menuData = [
   [
     {
-      title: '收货地址',
+      title: '自提点管理',
       tit: '',
       url: '',
       type: 'address',
     },
     {
-      title: '优惠券',
+      title: '个人设置',
       tit: '',
       url: '',
-      type: 'coupon',
+      type: 'person-info',
     },
     {
-      title: '积分',
+      title: '申请开店',
       tit: '',
       url: '',
-      type: 'point',
-    },
-  ],
-  [
-    {
-      title: '帮助中心',
-      tit: '',
-      url: '',
-      type: 'help-center',
-    },
-    {
-      title: '客服热线',
-      tit: '',
-      url: '',
-      type: 'service',
-      icon: 'service',
+      type: 'apply-seller',
     },
   ],
 ];
@@ -112,36 +97,29 @@ Page({
   },
 
   fetUseriInfoHandle() {
-    fetchUserCenter().then(
-      ({
+    fetchUserCenter().then(({ userInfo, countsData, orderTagInfos: orderInfo, customerServiceInfo }) => {
+      // eslint-disable-next-line no-unused-expressions
+      menuData?.[0].forEach((v) => {
+        countsData.forEach((counts) => {
+          if (counts.type === v.type) {
+            // eslint-disable-next-line no-param-reassign
+            v.tit = counts.num;
+          }
+        });
+      });
+      const info = orderTagInfos.map((v, index) => ({
+        ...v,
+        ...orderInfo[index],
+      }));
+      this.setData({
         userInfo,
-        countsData,
-        orderTagInfos: orderInfo,
+        menuData,
+        orderTagInfos: info,
         customerServiceInfo,
-      }) => {
-        // eslint-disable-next-line no-unused-expressions
-        menuData?.[0].forEach((v) => {
-          countsData.forEach((counts) => {
-            if (counts.type === v.type) {
-              // eslint-disable-next-line no-param-reassign
-              v.tit = counts.num;
-            }
-          });
-        });
-        const info = orderTagInfos.map((v, index) => ({
-          ...v,
-          ...orderInfo[index],
-        }));
-        this.setData({
-          userInfo,
-          menuData,
-          orderTagInfos: info,
-          customerServiceInfo,
-          currAuthStep: 2,
-        });
-        wx.stopPullDownRefresh();
-      },
-    );
+        currAuthStep: 2,
+      });
+      wx.stopPullDownRefresh();
+    });
   },
 
   onClickCell({ currentTarget }) {
@@ -152,32 +130,18 @@ Page({
         wx.navigateTo({ url: '/pages/usercenter/address/list/index' });
         break;
       }
-      case 'service': {
-        this.openMakePhone();
-        break;
-      }
-      case 'help-center': {
+      case 'apply-seller': {
         Toast({
           context: this,
           selector: '#t-toast',
-          message: '你点击了帮助中心',
+          message: '你点击了"申请开店"',
           icon: '',
           duration: 1000,
         });
         break;
       }
-      case 'point': {
-        Toast({
-          context: this,
-          selector: '#t-toast',
-          message: '你点击了积分菜单',
-          icon: '',
-          duration: 1000,
-        });
-        break;
-      }
-      case 'coupon': {
-        wx.navigateTo({ url: '/pages/coupon/coupon-list/index' });
+      case 'person-info': {
+        wx.navigateTo({ url: '/pages/usercenter/person-info/index' });
         break;
       }
       default: {
