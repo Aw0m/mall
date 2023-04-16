@@ -1,6 +1,4 @@
-import {
-  getToken
-} from '../utils/auth';
+import { getToken } from '../utils/auth';
 
 const baseUrl = 'http://47.113.231.167:8081';
 
@@ -19,10 +17,10 @@ export function request(url, data, method, isToken) {
       method: method,
       header: headers,
       success: function (res) {
-        if (res.statusCode == 200) {
+        if (res.statusCode === 200) {
           resolve(res.data);
         } else {
-          if (res.statusCode == 401)
+          if (res.statusCode === 401)
             wx.navigateTo({
               url: `/pages/login/login`,
             });
