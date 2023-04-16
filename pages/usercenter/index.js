@@ -148,7 +148,11 @@ Page({
         break;
       }
       case 'person-info': {
-        wx.navigateTo({ url: '/pages/usercenter/person-info/index' });
+        if (!isLogin()) {
+          wx.navigateTo({ url: '/pages/login/login' });
+        } else {
+          wx.navigateTo({ url: '/pages/usercenter/person-info/index' });
+        }
         break;
       }
       default: {

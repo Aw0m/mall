@@ -25,7 +25,17 @@ Page({
           content: '微信授权登录后才能正常使用小程序功能',
           cancelText: '拒绝',
           confirmText: '同意',
-          success() {
+          success(res) {
+            if (!res.confirm) {
+              wx.navigateBack({
+                delta: 1,
+              });
+              wx.showToast({
+                title: '拒绝登录',
+                icon: 'none',
+              });
+              return
+            }
             //调用微信小程序的获取用户信息的接口
             wx.getUserProfile({
               desc: '用于完善会员资料', // 声明获取用户个人信息后的用途
@@ -72,7 +82,7 @@ Page({
               delta: 1,
             });
             wx.showToast({
-              title: '拒绝登录',
+              title: '登录失败',
               icon: 'none',
             });
           },

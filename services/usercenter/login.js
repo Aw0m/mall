@@ -2,13 +2,13 @@ import {
   request
 } from '../../utils/request';
 
-export function login(code, username, avatar_url, gender) {
+export function login(code, username, avatarURL, gender) {
   return request(
     '/login', {
-      code,
-      username,
-      avatar_url,
-      gender,
+      code: code,
+      username: username,
+      avatar_url: avatarURL,
+      gender: gender,
     },
     'POST',
     false,
