@@ -25,6 +25,5 @@ export function removeUserInfo() {
 }
 
 export function isLogin() {
-  console.log("login:",getToken() != null && getToken() !== '' && typeof getToken() !== undefined)
-  return getToken() != null && getToken() !== '' && typeof getToken() !== undefined
+  return getToken() !== null && getToken() !== '' && typeof getToken() !== undefined
 }

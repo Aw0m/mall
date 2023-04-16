@@ -20,9 +20,13 @@ Page({
         name: '女',
         code: '2',
       },
+      {
+        name: '其他',
+        code: '3',
+      },
     ],
     typeVisible: false,
-    genderMap: ['', '男', '女'],
+    genderMap: ['', '男', '女', '其他'],
   },
   onLoad() {
     this.init();

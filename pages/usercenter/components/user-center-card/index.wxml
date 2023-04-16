@@ -2,7 +2,7 @@
   <!-- 未登录的情况 -->
   <block wx:if="{{currAuthStep === AuthStepType.ONE}}">
     <view class="user-center-card__header" bind:tap="gotoUserEditPage">
-      <t-avatar image="{{userInfo.avatarUrl || defaultAvatarUrl}}" class="user-center-card__header__avatar" />
+      <t-avatar image="{{ defaultAvatarUrl}}" class="user-center-card__header__avatar" />
       <view class="user-center-card__header__name">{{'请登录'}}</view>
     </view>
   </block>

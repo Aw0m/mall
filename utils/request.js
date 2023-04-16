@@ -1,7 +1,7 @@
 import { getToken } from '../utils/auth';
 
-const baseUrl = 'http://47.113.231.167:8081';
-
+// const baseUrl = 'http://47.113.231.167:8081';
+const baseUrl = 'http://localhost:8080';
 export function request(url, data, method, isToken) {
   return new Promise(function (resolve, reject) {
     const headers = {

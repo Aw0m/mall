@@ -1,7 +1,7 @@
 import { config } from '../../config/index';
-import { isLogin } from "../../utils/auth";
-import { delay } from "../_utils/delay";
-import { genSimpleUserInfo } from "../../model/usercenter";
+import { getUserInfo, isLogin } from '../../utils/auth';
+import { delay } from '../_utils/delay';
+import { genSimpleUserInfo } from '../../model/usercenter';
 
 /** 获取个人中心信息 */
 function mockFetchPerson() {
@@ -20,69 +20,24 @@ function mockFetchPerson() {
   }));
 }
 
-
 /** 获取个人中心信息 */
 export function fetchPerson() {
   if (!isLogin()) {
-    return delay().then(() => ({
-      avatarUrl:
-        'https://we-retail-static-1300977798.cos.ap-guangzhou.myqcloud.com/retail-ui/components-exp/avatar/avatar-1.jpg',
-      nickName: '111',
-      phoneNumber: '13438358888',
-      gender: 2,
-      address: {
-        provinceName: '',
-        provinceCode: '',
-        cityName: '',
-        cityCode: '',
-      },
-    }));
+    wx.navigateTo({ url: '/pages/login/login' });
+    return;
   }
-
-  if (config.useMock) {
-    return mockFetchPerson();
-  }
-
-  return new Promise((resolve) => {
-    resolve('real api');
-  });
-}
-
-export function request(config) {
-  const instance = axios.create({
-    baseURL: 'http://127.0.0.1:8000',
-    timeout: 15000,
-    headers: {
-      'Authorization':  window.localStorage.getItem('token')
-    }
-  })
-
-  console.log("本次发送的token:", window.localStorage.getItem('token'))
-  instance.interceptors.request.use(config => {
-    return config;
-  }, error => {
-    console.log(error);
-  })
-
-  // 拦截响应
-  instance.interceptors.response.use(res => {
-    return res.data
-  }, error => {
-    console.log(error);
-  })
-
-  // 发送真正的网络请求
-  return instance(config);
-}
-
-
-export function login (userInfo) {
-  return request({
-    method: 'post',
-    url:    '/users/login',
-    params:   {
-      userName: userInfo.username,
-      password: userInfo.password
-    }
-  })
+  const userinfo = getUserInfo();
+  console.log(userinfo);
+  return delay().then(() => ({
+    avatarUrl: userinfo.avatar_url,
+    nickName: userinfo.username,
+    phoneNumber: 'unknow',
+    gender: userinfo.gender === 'm' ? '1' : userinfo.gender === 'f' ? '2' : '3',
+    address: {
+      provinceName: '',
+      provinceCode: '',
+      cityName: '',
+      cityCode: '',
+    },
+  }));
 }

@@ -1,5 +1,6 @@
 import { fetchUserCenter } from '../../services/usercenter/fetchUsercenter';
 import Toast from 'tdesign-miniprogram/toast/index';
+import { isLogin } from '../../utils/auth';
 
 const menuData = [
   [
@@ -83,7 +84,13 @@ Page({
   onLoad() {
     this.getVersionInfo();
   },
-
+  toLogin() {
+    if (!isLogin()) {
+      wx.navigateTo({ url: '/pages/login/login' });
+    } else {
+      wx.navigateTo({ url: '/pages/usercenter/person-info/index' });
+    }
+  },
   onShow() {
     this.getTabBar().init();
     this.init();
@@ -116,7 +123,7 @@ Page({
         menuData,
         orderTagInfos: info,
         customerServiceInfo,
-        currAuthStep: 2,
+        currAuthStep: isLogin() ? 3 : 1,
       });
       wx.stopPullDownRefresh();
     });
