@@ -1,8 +1,22 @@
 import { fetchPerson } from '../../../services/usercenter/fetchPerson';
 import { phoneEncryption } from '../../../utils/util';
 import Toast from 'tdesign-miniprogram/toast/index';
+import { changeUserInfo } from "../../../services/usercenter/user";
+import { store } from "../../../store/store";
+import { storeBindingsBehavior } from "mobx-miniprogram-bindings";
 
 Page({
+  behaviors: [storeBindingsBehavior],
+  storeBindings: {
+    store,
+    fields: {
+      userInfo: 'userInfo',
+      navbarHeight: 'navbarHeight',
+    },
+    actions: {
+      updateUserInfo: 'updateUserInfo',
+    },
+  },
   data: {
     personInfo: {
       avatarUrl: '',
@@ -60,6 +74,9 @@ Page({
       case 'avatarUrl':
         this.toModifyAvatar();
         break;
+      case 'phoneNumber':
+        Toast({ context: this, selector: '#t-toast', message: '点击了PhoneNumber' });
+        break;
       default: {
         break;
       }
@@ -78,12 +95,38 @@ Page({
         'personInfo.gender': value,
       },
       () => {
-        Toast({
-          context: this,
-          selector: '#t-toast',
-          message: '设置成功',
-          theme: 'success',
-        });
+        let genderVal;
+        switch (value) {
+          case '1':
+            genderVal = 'm';
+            break;
+          case '2':
+            genderVal = 'f';
+            break;
+          default:
+            genderVal = 'u'
+        }
+        changeUserInfo({
+          gender: genderVal
+        }).then(
+          () => {
+            Toast({
+              context: this,
+              selector: '#t-toast',
+              message: '设置成功',
+              theme: 'success',
+            });
+            this.updateUserInfo()
+          },
+          () => {
+            Toast({
+              context: this,
+              selector: '#t-toast',
+              message: '设置失败',
+              theme: 'failed',
+            });
+          }
+        )
       },
     );
   },

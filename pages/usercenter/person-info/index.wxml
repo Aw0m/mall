@@ -32,7 +32,7 @@
       bordered="{{false}}"
       title="手机号"
       arrow
-      note="{{personInfo.phoneNumber ? personInfo.phoneNumber : '去绑定手机号'}}"
+      note="{{personInfo.phoneNumber !== '' ? personInfo.phoneNumber : '去绑定手机号'}}"
       data-type="phoneNumber"
       bind:click="onClickCell"
       t-class="t-cell-class"

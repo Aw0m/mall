@@ -1,4 +1,3 @@
-import { config } from '../../config/index';
 import { getUserInfo, isLogin } from '../../utils/auth';
 import { delay } from '../_utils/delay';
 import { genSimpleUserInfo } from '../../model/usercenter';
@@ -27,11 +26,10 @@ export function fetchPerson() {
     return;
   }
   const userinfo = getUserInfo();
-  console.log(userinfo);
   return delay().then(() => ({
     avatarUrl: userinfo.avatar_url,
     nickName: userinfo.username,
-    phoneNumber: 'unknow',
+    phoneNumber: userinfo.phone_num,
     gender: userinfo.gender === 'm' ? '1' : userinfo.gender === 'f' ? '2' : '3',
     address: {
       provinceName: '',

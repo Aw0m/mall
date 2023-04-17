@@ -1,6 +1,6 @@
 import { observable, action } from 'mobx-miniprogram';
-import { updateInfo, updateClubInfo } from '../services/usercenter/updateInfo';
-import { isLogin } from '../utils/auth';
+import { updateInfo } from '../services/usercenter/updateInfo';
+import { isLogin, setUserInfo } from "../utils/auth";
 export const store = observable({
   //底部安全区
   pbSafe: wx.getSystemInfoSync().screenHeight - wx.getSystemInfoSync().safeArea.bottom,
@@ -26,11 +26,9 @@ export const store = observable({
     updateInfo()
       .then((res) => {
         this.userInfo = res.rsp.user;
-        return updateClubInfo();
+        setUserInfo(this.userInfo);
       })
-      .then((res) => {
-        this.userClub = res.rsp.club;
-      })
+      .then(() => {})
       .catch(() => {});
   }),
 });
