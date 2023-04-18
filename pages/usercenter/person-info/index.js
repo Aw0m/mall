@@ -1,9 +1,9 @@
 import { fetchPerson } from '../../../services/usercenter/fetchPerson';
 import { phoneEncryption } from '../../../utils/util';
 import Toast from 'tdesign-miniprogram/toast/index';
-import { changeUserInfo } from "../../../services/usercenter/user";
-import { store } from "../../../store/store";
-import { storeBindingsBehavior } from "mobx-miniprogram-bindings";
+import { changeUserInfo } from '../../../services/usercenter/user';
+import { store } from '../../../store/store';
+import { storeBindingsBehavior } from 'mobx-miniprogram-bindings';
 
 Page({
   behaviors: [storeBindingsBehavior],
@@ -42,7 +42,10 @@ Page({
     typeVisible: false,
     genderMap: ['', '男', '女', '其他'],
   },
-  onLoad() {
+  // onLoad() {
+  //   this.init();
+  // },
+  onShow() {
     this.init();
   },
   init() {
@@ -104,10 +107,10 @@ Page({
             genderVal = 'f';
             break;
           default:
-            genderVal = 'u'
+            genderVal = 'u';
         }
         changeUserInfo({
-          gender: genderVal
+          gender: genderVal,
         }).then(
           () => {
             Toast({
@@ -116,7 +119,7 @@ Page({
               message: '设置成功',
               theme: 'success',
             });
-            this.updateUserInfo()
+            this.updateUserInfo();
           },
           () => {
             Toast({
@@ -125,8 +128,8 @@ Page({
               message: '设置失败',
               theme: 'failed',
             });
-          }
-        )
+          },
+        );
       },
     );
   },
