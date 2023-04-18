@@ -21,9 +21,6 @@
           </text>
         </view>
       </view>
-      <view catch:tap="onEdit" data-item="{{address}}" class="address-edit">
-        <t-icon name="{{customIcon}}" class-prefix="{{classPrefix}}" size="46rpx" color="#BBBBBB" />
-      </view>
     </view>
     <view slot="right" class="swipe-right-del delete-class" bindtap="onDelete" data-item="{{address}}"> 删除 </view>
   </t-swipe-cell>

@@ -48,6 +48,7 @@ export async function fetchDeliveryAddressList() {
   const addressList = res.rsp.address_list;
   for (let i = 0; i < addressList.length; i++) {
     resList.push({
+      addressId:addressList[i].address_id,
       name: addressList[i].address_name,
       address: addressList[i].detail_info,
     });
