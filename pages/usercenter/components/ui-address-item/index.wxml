@@ -1,5 +1,5 @@
 <wxs module="phoneReg">
-  var toHide = function(array) { var mphone = array.substring(0, 3) + '****' + array.substring(7); return mphone; }
+  var toHide = function(array) { var mphone = array.substring(0, 3) + '' + array.substring(7); return mphone; }
   module.exports.toHide = toHide;
 </wxs>
 <view class="address-item-wrapper item-wrapper-class">

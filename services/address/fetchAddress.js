@@ -1,4 +1,5 @@
 import { config } from '../../config/index';
+import { getAddressList } from "../usercenter/address";
 
 /** 获取收货地址 */
 function mockFetchDeliveryAddress(id) {
@@ -37,12 +38,21 @@ function mockFetchDeliveryAddressList(len = 0) {
 }
 
 /** 获取收货地址列表 */
-export function fetchDeliveryAddressList(len = 10) {
-  if (config.useMock) {
-    return mockFetchDeliveryAddressList(len);
-  }
+export async function fetchDeliveryAddressList() {
 
+  // const a = await mockFetchDeliveryAddressList(10);
+  // console.log("a:", a);
+  // return a;
+  const res = await getAddressList({});
+  const resList = [];
+  const addressList = res.rsp.address_list;
+  for (let i = 0; i < addressList.length; i++) {
+    resList.push({
+      name: addressList[i].address_name,
+      address: addressList[i].detail_info,
+    });
+  }
   return new Promise((resolve) => {
-    resolve('real api');
+    resolve(resList);
   });
 }
