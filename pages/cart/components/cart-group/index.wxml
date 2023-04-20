@@ -17,7 +17,6 @@
           <t-icon prefix="wr" size="40rpx" color="#333333" name="store" />
           <view class="store-name">{{store.storeName}}</view>
         </view>
-        <view class="get-coupon" catch:tap="gotoCoupons">优惠券</view>
       </view>
     </view>
     <block wx:for="{{store.promotionGoodsList}}" wx:for-item="promotion" wx:for-index="promoindex" wx:key="promoindex">
@@ -65,11 +64,7 @@
                 catchspecs="specsTap"
                 catchclick="goGoodsDetail"
               >
-                <view slot="thumb-cover" class="stock-mask" wx:if="{{goods.shortageStock || goods.stockQuantity <= 3}}">
-                  仅剩{{goods.stockQuantity}}件
-                </view>
                 <view slot="append-body" class="goods-stepper">
-                  <view class="stepper-tip" wx:if="{{goods.shortageStock}}">库存不足</view>
                   <t-stepper
                     classname="stepper-info"
                     value="{{goods.quantity}}"
