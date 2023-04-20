@@ -36,9 +36,10 @@ export async function fetchCartGroupData() {
         spuId: carCommodity.commodity.commodity_id,
         skuId: '135691622',
         isSelected: 0,
-        thumb: 'https://cdn-we-retail.ym.tencent.com/tsr/goods/dz-3a.png',
+        thumb: carCommodity.commodity.image_url,
         title: carCommodity.commodity.commodity_name,
-        primaryImage: 'https://cdn-we-retail.ym.tencent.com/tsr/goods/dz-3a.png',
+        //TODO 修改默认图片显示
+        primaryImage: carCommodity.commodity.image_url,
         quantity: commodityNum, // 数量
         stockStatus: true,
         stockQuantity: 99, // 库存
