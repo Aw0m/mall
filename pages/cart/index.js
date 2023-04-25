@@ -1,6 +1,6 @@
 import Dialog from 'tdesign-miniprogram/dialog/index';
 import Toast from 'tdesign-miniprogram/toast/index';
-import { fetchCartGroupData } from '../../services/cart/cart';
+import { fetchCartGroupData, updateCartNum } from "../../services/cart/cart";
 
 Page({
   data: {
@@ -129,7 +129,7 @@ Page({
     return Promise.resolve();
   },
 
-  // 删除加购商品
+  //TODO 删除加购商品
   // 注：实际场景时应该调用接口
   deleteGoodsService({ spuId, skuId }) {
     function deleteGoods(group) {
@@ -193,10 +193,12 @@ Page({
 
   onQuantityChange(e) {
     const {
-      goods: { spuId, skuId },
+      goods: { spuId, skuId, uid },
       quantity,
     } = e.detail;
     // 加购数量超过库存数量
+    // eslint-disable-next-line camelcase
+    updateCartNum({ cart_id: uid, quantity: quantity });
     this.changeQuantityService({ spuId, skuId, quantity }).then(() => this.refreshData());
   },
 

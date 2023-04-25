@@ -31,7 +31,7 @@ export async function fetchCartGroupData() {
       const commodityNum = carCommodity.cart.commodity_num;
       totalPrice += price * commodityNum;
       goodsPromotionList.push({
-        uid: carCommodity.commodity.commodity_id,
+        uid: carCommodity.cart.cart_id,
         storeId: storeId,
         spuId: carCommodity.commodity.commodity_id,
         skuId: '135691622',
@@ -87,4 +87,7 @@ export async function fetchCartGroupData() {
 }
 export function getCartList(data) {
   return request(`/cart/get_cart_list`, data, 'POST', true);
+}
+export function updateCartNum(data) {
+  return request(`/cart/update_cart_num`, data, 'POST', true);
 }

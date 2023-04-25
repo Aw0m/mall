@@ -291,12 +291,13 @@ Page({
       commentScore: getCommodityDetailRsp.rsp.comment_info.score_res,
       commentContent: getCommodityDetailRsp.rsp.comment_info.comment_text,
     };
+    const imageURL = getCommodityDetailRsp.rsp.commodity_info.image_url;
     this.setData({
       price: price,
       commentsList: [comment],
       commodityName: commodityName,
       imageURLList: [getCommodityDetailRsp.rsp.commodity_info.image_url],
-      primaryImage: getCommodityDetailRsp.rsp.commodity_info.image_url,
+      primaryImage: imageURL !== '' ? imageURL : 'https://mall-1301454934.cos.ap-shanghai.myqcloud.com/unknown.png',
     });
     // Promise.all([fetchGood(spuId), fetchActivityList()]).then(async (res) => {
     // eslint-disable-next-line camelcase
