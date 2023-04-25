@@ -74,7 +74,6 @@
     <buy-bar
       jumpArray="{{jumpArray}}"
       soldout="{{soldout}}"
-      shopCartNum="{{cartNum}}"
       buttonType="{{buttonType}}"
       bind:toAddCart="toAddCart"
       bind:toNav="toNav"
@@ -86,7 +85,7 @@
     id="goodsSpecsPopup"
     show="{{isSpuSelectPopupShow}}"
     title="{{details.title || ''}}"
-    src="{{specImg ? specImg : primaryImage}}"
+    src="{{primaryImage}}"
     specList="{{details.specList || []}}"
     skuList="{{skuArray}}"
     limitBuyInfo="{{details.limitInfo[0].text || ''}}"

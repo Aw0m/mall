@@ -1,5 +1,5 @@
 import Toast from 'tdesign-miniprogram/toast/index';
-import { fetchGood, getCommodityDetail } from "../../../services/good/fetchGood";
+import { fetchGood, getCommodityDetail } from '../../../services/good/fetchGood';
 import { fetchActivityList } from '../../../services/activity/fetchActivityList';
 import {
   getGoodsDetailsCommentList,
@@ -7,6 +7,7 @@ import {
 } from '../../../services/good/fetchGoodsDetailsComments';
 
 import { cdnBase } from '../../../config/index';
+import { addToCart } from '../../../services/good/addToCart';
 
 const imgPrefix = `${cdnBase}/`;
 
@@ -14,9 +15,7 @@ const recLeftImg = `${imgPrefix}common/rec-left.png`;
 const recRightImg = `${imgPrefix}common/rec-right.png`;
 const obj2Params = (obj = {}, encode = false) => {
   const result = [];
-  Object.keys(obj).forEach((key) =>
-    result.push(`${key}=${encode ? encodeURIComponent(obj[key]) : obj[key]}`),
-  );
+  Object.keys(obj).forEach((key) => result.push(`${key}=${encode ? encodeURIComponent(obj[key]) : obj[key]}`));
 
   return result.join('&');
 };
@@ -185,55 +184,66 @@ Page({
     }
   },
 
-  addCart() {
-    const { isAllSelectedSku } = this.data;
-    Toast({
-      context: this,
-      selector: '#t-toast',
-      message: isAllSelectedSku ? '点击加入购物车' : '请选择规格',
-      icon: '',
-      duration: 1000,
+  async addCart() {
+    const rsp = await addToCart({
+      // eslint-disable-next-line camelcase
+      commodity_id: this.data.spuId,
+      // eslint-disable-next-line camelcase
+      commodity_num: this.data.buyNum,
     });
-  },
-
-  gotoBuy(type) {
-    const { isAllSelectedSku, buyNum } = this.data;
-    if (!isAllSelectedSku) {
+    if (rsp.message !== 'success') {
       Toast({
         context: this,
         selector: '#t-toast',
-        message: '请选择规格',
+        message: `加入购物车失败`,
         icon: '',
         duration: 1000,
       });
       return;
     }
-    this.handlePopupHide();
-    const query = {
-      quantity: buyNum,
-      storeId: '1',
-      spuId: this.data.spuId,
-      goodsName: this.data.details.title,
-      skuId:
-        type === 1 ? this.data.skuList[0].skuId : this.data.selectItem.skuId,
-      available: this.data.details.available,
-      price: this.data.details.minSalePrice,
-      specInfo: this.data.details.specList?.map((item) => ({
-        specTitle: item.title,
-        specValue: item.specValueList[0].specValue,
-      })),
-      primaryImage: this.data.details.primaryImage,
-      thumb: this.data.details.primaryImage,
-      title: this.data.details.title,
-    };
-    let urlQueryStr = obj2Params({
-      goodsRequestList: JSON.stringify([query]),
+    Toast({
+      context: this,
+      selector: '#t-toast',
+      message: `加入购物车成功`,
+      icon: '',
+      duration: 1000,
     });
-    urlQueryStr = urlQueryStr ? `?${urlQueryStr}` : '';
-    const path = `/pages/order/order-confirm/index${urlQueryStr}`;
-    wx.navigateTo({
-      url: path,
+  },
+
+  gotoBuy() {
+    Toast({
+      context: this,
+      selector: '#t-toast',
+      message: `点击了购买,value:${this.data.buyNum}`,
+      icon: '',
+      duration: 1000,
     });
+    // this.handlePopupHide();
+    // const query = {
+    //   quantity: buyNum,
+    //   storeId: '1',
+    //   spuId: this.data.spuId,
+    //   goodsName: this.data.details.title,
+    //   skuId:
+    //     type === 1 ? this.data.skuList[0].skuId : this.data.selectItem.skuId,
+    //   available: this.data.details.available,
+    //   price: this.data.details.minSalePrice,
+    //   specInfo: this.data.details.specList?.map((item) => ({
+    //     specTitle: item.title,
+    //     specValue: item.specValueList[0].specValue,
+    //   })),
+    //   primaryImage: this.data.details.primaryImage,
+    //   thumb: this.data.details.primaryImage,
+    //   title: this.data.details.title,
+    // };
+    // let urlQueryStr = obj2Params({
+    //   goodsRequestList: JSON.stringify([query]),
+    // });
+    // urlQueryStr = urlQueryStr ? `?${urlQueryStr}` : '';
+    // const path = `/pages/order/order-confirm/index${urlQueryStr}`;
+    // wx.navigateTo({
+    //   url: path,
+    // });
   },
 
   specsConfirm() {
@@ -286,6 +296,7 @@ Page({
       commentsList: [comment],
       commodityName: commodityName,
       imageURLList: [getCommodityDetailRsp.rsp.commodity_info.image_url],
+      primaryImage: getCommodityDetailRsp.rsp.commodity_info.image_url,
     });
     // Promise.all([fetchGood(spuId), fetchActivityList()]).then(async (res) => {
     // eslint-disable-next-line camelcase
@@ -327,14 +338,7 @@ Page({
       const code = 'Success';
       const data = await getGoodsDetailsCommentsCount();
       if (code.toUpperCase() === 'SUCCESS') {
-        const {
-          badCount,
-          commentCount,
-          goodCount,
-          goodRate,
-          hasImageCount,
-          middleCount,
-        } = data;
+        const { badCount, commentCount, goodCount, goodRate, hasImageCount, middleCount } = data;
         const nextState = {
           commentsStatistics: {
             badCount: parseInt(`${badCount}`),

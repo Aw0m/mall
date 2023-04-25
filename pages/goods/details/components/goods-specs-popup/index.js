@@ -305,9 +305,10 @@ Component({
     },
 
     addCart() {
+      console.log('this.data.buyNum:', this.data.buyNum);
       const { isStock } = this.properties;
       if (!isStock) return;
-      this.triggerEvent('addCart');
+      this.triggerEvent('addCart', { buyNum: this.data.buyNum }, {});
     },
 
     buyNow() {
@@ -320,18 +321,21 @@ Component({
     },
 
     // 总处理
-    setBuyNum(buyNum) {
-      this.setData({
-        buyNum,
-      });
-      this.triggerEvent('changeNum', {
-        buyNum,
-      });
-    },
+    // setBuyNum(buyNum) {
+    //   this.setData({
+    //     buyNum,
+    //   });
+    //   this.triggerEvent('changeNum', {
+    //     buyNum,
+    //   });
+    // },
 
     handleBuyNumChange(e) {
       const { value } = e.detail;
       this.setData({
+        buyNum: value,
+      });
+      this.triggerEvent('changeNum', {
         buyNum: value,
       });
     },

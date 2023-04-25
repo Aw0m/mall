@@ -32,7 +32,7 @@ Component({
   data: {
     pArr: [],
   },
-
+  //TODO
   methods: {
     format(price) {
       price = parseFloat(`${price}`);

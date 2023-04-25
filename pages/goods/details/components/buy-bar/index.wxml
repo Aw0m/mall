@@ -20,10 +20,10 @@
 	</view>
 	<block wx:if="{{buttonType === 1}}">
 		<view class="flex buy-buttons">
-			<view class="bar-separately {{soldout ||  'bar-addCart-disabled' }}" bindtap="toAddCart">
+			<view class="bar-separately {{soldout}}" bindtap="toAddCart">
 				加入购物车
 			</view>
-			<view class="bar-buy {{soldout || 'bar-buyNow-disabled'}}" bindtap="toBuyNow">
+			<view class="bar-buy {{soldout}}" bindtap="toBuyNow">
 				立即购买
 			</view>
 		</view>
