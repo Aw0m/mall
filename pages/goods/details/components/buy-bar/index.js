@@ -44,14 +44,10 @@ Component({
 
   methods: {
     toAddCart() {
-      const { isStock } = this.properties;
-      if (!isStock) return;
       this.triggerEvent('toAddCart');
     },
 
     toBuyNow(e) {
-      const { isStock } = this.properties;
-      if (!isStock) return;
       this.triggerEvent('toBuyNow', e);
     },
 

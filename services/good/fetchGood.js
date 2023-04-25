@@ -1,4 +1,5 @@
 import { config } from '../../config/index';
+import { request } from '../../utils/request';
 
 /** 获取商品列表 */
 function mockFetchGood(ID = 0) {
@@ -15,4 +16,8 @@ export function fetchGood(ID = 0) {
   return new Promise((resolve) => {
     resolve('real api');
   });
+}
+
+export function getCommodityDetail(data) {
+  return request(`/commodity/get_commodity_detail`, data, 'POST', true);
 }

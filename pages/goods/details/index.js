@@ -1,5 +1,5 @@
 import Toast from 'tdesign-miniprogram/toast/index';
-import { fetchGood } from '../../../services/good/fetchGood';
+import { fetchGood, getCommodityDetail } from "../../../services/good/fetchGood";
 import { fetchActivityList } from '../../../services/activity/fetchActivityList';
 import {
   getGoodsDetailsCommentList,
@@ -23,6 +23,9 @@ const obj2Params = (obj = {}, encode = false) => {
 
 Page({
   data: {
+    price: 0,
+    commodityName: '未知商品',
+    imageURLList: [''],
     commentsList: [],
     commentsStatistics: {
       badCount: 0,
@@ -146,44 +149,6 @@ Page({
     });
     this.getSkuItem(specList, selectedSku);
   },
-
-  getSkuItem(specList, selectedSku) {
-    const { skuArray, primaryImage } = this.data;
-    const selectedSkuValues = this.getSelectedSkuValues(specList, selectedSku);
-    let selectedAttrStr = ` 件  `;
-    selectedSkuValues.forEach((item) => {
-      selectedAttrStr += `，${item.specValue}  `;
-    });
-    // eslint-disable-next-line array-callback-return
-    const skuItem = skuArray.filter((item) => {
-      let status = true;
-      (item.specInfo || []).forEach((subItem) => {
-        if (
-          !selectedSku[subItem.specId] ||
-          selectedSku[subItem.specId] !== subItem.specValueId
-        ) {
-          status = false;
-        }
-      });
-      if (status) return item;
-    });
-    this.selectSpecsName(selectedSkuValues.length > 0 ? selectedAttrStr : '');
-    if (skuItem) {
-      this.setData({
-        selectItem: skuItem,
-        selectSkuSellsPrice: skuItem.price || 0,
-      });
-    } else {
-      this.setData({
-        selectItem: null,
-        selectSkuSellsPrice: 0,
-      });
-    }
-    this.setData({
-      specImg: skuItem && skuItem.skuImage ? skuItem.skuImage : primaryImage,
-    });
-  },
-
   // 获取已选择的sku名称
   getSelectedSkuValues(skuTree, selectedSku) {
     const normalizedTree = this.normalizeSkuTree(skuTree);
@@ -258,7 +223,6 @@ Page({
         specValue: item.specValueList[0].specValue,
       })),
       primaryImage: this.data.details.primaryImage,
-      spuId: this.data.details.spuId,
       thumb: this.data.details.primaryImage,
       title: this.data.details.title,
     };
@@ -307,73 +271,38 @@ Page({
     });
   },
 
-  getDetail(spuId) {
-    Promise.all([fetchGood(spuId), fetchActivityList()]).then((res) => {
-      const [details, activityList] = res;
-      const skuArray = [];
-      const {
-        skuList,
-        primaryImage,
-        isPutOnSale,
-        minSalePrice,
-        maxSalePrice,
-        maxLinePrice,
-        soldNum,
-      } = details;
-      skuList.forEach((item) => {
-        skuArray.push({
-          skuId: item.skuId,
-          quantity: item.stockInfo ? item.stockInfo.stockQuantity : 0,
-          specInfo: item.specInfo,
-        });
-      });
-      const promotionArray = [];
-      activityList.forEach((item) => {
-        promotionArray.push({
-          tag: item.promotionSubCode === 'MYJ' ? '满减' : '满折',
-          label: '满100元减99.9元',
-        });
-      });
-      this.setData({
-        details,
-        activityList,
-        isStock: details.spuStockQuantity > 0,
-        maxSalePrice: maxSalePrice ? parseInt(maxSalePrice) : 0,
-        maxLinePrice: maxLinePrice ? parseInt(maxLinePrice) : 0,
-        minSalePrice: minSalePrice ? parseInt(minSalePrice) : 0,
-        list: promotionArray,
-        skuArray: skuArray,
-        primaryImage,
-        soldout: isPutOnSale === 0,
-        soldNum,
-      });
+  async getDetail(spuId) {
+    const getCommodityDetailRsp = await getCommodityDetail({ commodity_id: spuId });
+    const price = getCommodityDetailRsp.rsp.commodity_info.price * 100;
+    const commodityName = getCommodityDetailRsp.rsp.commodity_info.commodity_name;
+    const comment = {
+      userHeadUrl: getCommodityDetailRsp.rsp.comment_info.commenter_avatar_url,
+      userName: getCommodityDetailRsp.rsp.comment_info.commenter_name,
+      commentScore: getCommodityDetailRsp.rsp.comment_info.score_res,
+      commentContent: getCommodityDetailRsp.rsp.comment_info.comment_text,
+    };
+    this.setData({
+      price: price,
+      commentsList: [comment],
+      commodityName: commodityName,
+      imageURLList: [getCommodityDetailRsp.rsp.commodity_info.image_url],
     });
-  },
-
-  async getCommentsList() {
-    try {
-      const code = 'Success';
-      const data = await getGoodsDetailsCommentList();
-      const { homePageComments } = data;
-      if (code.toUpperCase() === 'SUCCESS') {
-        const nextState = {
-          commentsList: homePageComments.map((item) => {
-            return {
-              goodsSpu: item.spuId,
-              userName: item.userName || '',
-              commentScore: item.commentScore,
-              commentContent: item.commentContent || '用户未填写评价',
-              userHeadUrl: item.isAnonymity
-                ? this.anonymityAvatar
-                : item.userHeadUrl || this.anonymityAvatar,
-            };
-          }),
-        };
-        this.setData(nextState);
-      }
-    } catch (error) {
-      console.error('comments error:', error);
-    }
+    // Promise.all([fetchGood(spuId), fetchActivityList()]).then(async (res) => {
+    // eslint-disable-next-line camelcase
+    //
+    // let [details, activityList] = res;
+    // const { primaryImage, isPutOnSale, minSalePrice, maxSalePrice, maxLinePrice, soldNum } = details;
+    // this.setData({
+    // details,
+    // activityList,
+    // isStock:1,
+    // maxSalePrice: maxSalePrice ? parseInt(maxSalePrice) : 0,
+    // maxLinePrice: maxLinePrice ? parseInt(maxLinePrice) : 0,
+    // minSalePrice: minSalePrice ? parseInt(minSalePrice) : 0,
+    // primaryImage,
+    // soldout: isPutOnSale === 0,
+    // });
+    // });
   },
 
   onShareAppMessage() {
@@ -434,10 +363,9 @@ Page({
   onLoad(query) {
     const { spuId } = query;
     this.setData({
-      spuId: spuId,
+      spuId: spuId, //spudId === commodityId
     });
     this.getDetail(spuId);
-    this.getCommentsList(spuId);
     this.getCommentsStatistics(spuId);
   },
 });

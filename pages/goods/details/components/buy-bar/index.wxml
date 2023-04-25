@@ -1,6 +1,3 @@
-<view class="flex soldout flex-center wr-sold-out" wx:if="{{soldout ||  !isStock}}">
-	{{soldout ? '商品已下架' : '商品已售馨'}}
-</view>
 <view class="footer-cont flex flex-between wr-class">
 	<view class="flex flex-between bottom-operate-left" wx:if="{{jumpArray.length > 0}}">
 		<view
@@ -23,10 +20,10 @@
 	</view>
 	<block wx:if="{{buttonType === 1}}">
 		<view class="flex buy-buttons">
-			<view class="bar-separately {{soldout || !isStock ? 'bar-addCart-disabled' : ''}}" bindtap="toAddCart">
+			<view class="bar-separately {{soldout ||  'bar-addCart-disabled' }}" bindtap="toAddCart">
 				加入购物车
 			</view>
-			<view class="bar-buy {{soldout || !isStock ? 'bar-buyNow-disabled' : ''}}" bindtap="toBuyNow">
+			<view class="bar-buy {{soldout || 'bar-buyNow-disabled'}}" bindtap="toBuyNow">
 				立即购买
 			</view>
 		</view>
