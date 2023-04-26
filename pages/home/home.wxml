@@ -46,7 +46,6 @@
       />
     </t-tabs>
   </view>
-
   <goods-list
     wr-class="goods-list-container"
     goodsList="{{goodsList}}"

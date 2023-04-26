@@ -15,6 +15,7 @@ Page({
     interval: 5000,
     navigation: { type: 'dots' },
     swiperImageProps: { mode: 'scaleToFill' },
+    categoryCurrIdx: 0,
   },
 
   goodListPagination: {
@@ -65,8 +66,11 @@ Page({
   },
 
   tabChangeHandle(e) {
+    const { value } = e.detail;
+    this.data.categoryCurrIdx = parseInt(value);
     this.privateData.tabIndex = e.detail;
     this.loadGoodsList(true);
+    // this.init();
   },
 
   onReTry() {
@@ -75,7 +79,7 @@ Page({
 
   async loadGoodsList(fresh = false) {
     if (fresh) {
-      wx.pageScrollTo({
+      await wx.pageScrollTo({
         scrollTop: 0,
       });
     }
@@ -89,7 +93,8 @@ Page({
     }
 
     try {
-      const nextList = await fetchGoodsList(pageIndex, pageSize);
+      console.log('this.data.categoryCurrIdx:', this.data.categoryCurrIdx);
+      const nextList = await fetchGoodsList(pageIndex, pageSize, this.data.categoryCurrIdx);
       this.setData({
         goodsList: fresh ? nextList : this.data.goodsList.concat(nextList),
         goodsListLoadStatus: 0,
@@ -101,7 +106,7 @@ Page({
       this.setData({ goodsListLoadStatus: 3 });
     }
   },
-
+  // 查看商品详细
   goodListClickHandle(e) {
     const { index } = e.detail;
     const { spuId } = this.data.goodsList[index];
@@ -109,7 +114,7 @@ Page({
       url: `/pages/goods/details/index?spuId=${spuId}`,
     });
   },
-
+  // 点击商品的详细
   goodListAddCartHandle() {
     Toast({
       context: this,
@@ -117,11 +122,11 @@ Page({
       message: '点击加入购物车',
     });
   },
-
+  // 搜索界面
   navToSearchPage() {
     wx.navigateTo({ url: '/pages/goods/search/index' });
   },
-
+  // banner推广页面
   navToActivityDetail({ detail }) {
     const { index: promotionID = 0 } = detail || {};
     wx.navigateTo({

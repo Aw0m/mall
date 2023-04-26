@@ -1,4 +1,6 @@
 import { config, cdnBase } from '../../config/index';
+import { request } from "../../utils/request";
+import { genSwiperImageList } from "../../model/swiper";
 
 /** 获取首页数据 */
 function mockFetchHome() {
@@ -43,11 +45,30 @@ function mockFetchHome() {
 }
 
 /** 获取首页数据 */
-export function fetchHome() {
-  if (config.useMock) {
-    return mockFetchHome();
+export async function fetchHome() {
+  const { genSwiperImageList } = require('../../model/swiper');
+  const swiper = genSwiperImageList();
+  const rsp = await getCategoryList({});
+  const categoryList = rsp.rsp.category_list;
+  const tabList = [];
+  for (let i = 0; i < categoryList.length; i++) {
+    tabList.push({
+      text: categoryList[i].category_name,
+      key: categoryList[i].category_id,
+    });
   }
+  // if (config.useMock) {
+  //   return mockFetchHome();
+  // }
   return new Promise((resolve) => {
-    resolve('real api');
+    resolve({
+      swiper: swiper,
+      tabList: tabList,
+      activityImg: `${cdnBase}/activity/banner.png`,
+    });
   });
+}
+
+export function getCategoryList(data) {
+  return request(`/category/get_category_list`, data, 'POST', false);
 }

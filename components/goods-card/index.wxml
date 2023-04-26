@@ -39,13 +39,6 @@
 				  symbol="{{currency}}"
 				  price="{{goods.price}}"
 				/>
-				<price
-				  wx:if="{{ goods.originPrice && isValidityLinePrice }}"
-				  wr-class="goods-card__origin-price"
-				  symbol="{{currency}}"
-				  price="{{goods.originPrice}}"
-				  type="delthrough"
-				/>
 				<t-icon
 				  class="goods-card__add-cart"
 				  prefix="wr"

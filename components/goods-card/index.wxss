@@ -46,6 +46,8 @@
   border-radius: 0 0 16rpx 16rpx;
   padding: 16rpx 24rpx 18rpx;
   flex-direction: column;
+  position: relative;
+  width: 294rpx;
 }
 
 .goods-card__upper {
