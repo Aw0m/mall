@@ -68,7 +68,6 @@ Page({
   tabChangeHandle(e) {
     const { value } = e.detail;
     this.data.categoryCurrIdx = parseInt(value);
-    this.privateData.tabIndex = e.detail;
     this.loadGoodsList(true);
     // this.init();
   },
