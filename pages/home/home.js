@@ -89,11 +89,10 @@ Page({
     const pageSize = this.goodListPagination.num;
     let pageIndex = this.privateData.tabIndex * pageSize + this.goodListPagination.index + 1;
     if (fresh) {
-      pageIndex = 0;
+      pageIndex = 1;
     }
 
     try {
-      console.log('this.data.categoryCurrIdx:', this.data.categoryCurrIdx);
       const nextList = await fetchGoodsList(pageIndex, pageSize, this.data.categoryCurrIdx);
       this.setData({
         goodsList: fresh ? nextList : this.data.goodsList.concat(nextList),
