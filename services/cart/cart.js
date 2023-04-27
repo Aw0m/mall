@@ -71,7 +71,7 @@ export async function fetchCartGroupData() {
       isNotEmpty: true,
       storeGoods: storeGoods,
       invalidGoodItems: [],
-      totalAmount: totalPrice,
+      totalAmount: 0,
       selectedGoodsCount: 0,
     },
     code: 'Success',

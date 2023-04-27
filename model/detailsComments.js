@@ -19,12 +19,12 @@ export function getGoodsDetailsComments() {
 
 export function getGoodsDetailsCommentsCount() {
   return {
-    commentCount: '47',
+    commentCount: '1',
     badCount: '0',
     middleCount: '2',
     goodCount: '45',
     hasImageCount: '1',
-    goodRate: 95.7,
+    goodRate: 100,
     uidCount: '0',
   };
 }

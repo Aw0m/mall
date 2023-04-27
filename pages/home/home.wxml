@@ -6,7 +6,7 @@
     <t-search
       t-class-input="t-search__input"
       t-class-input-container="t-search__input-container"
-      placeholder="iphone 13 火热发售中"
+      placeholder="搜索商品"
       leftIcon=""
       disabled
     >

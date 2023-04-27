@@ -39,7 +39,7 @@ export async function fetchGoodsList(pageIndex = 1, pageSize = 20, categoryId = 
       title: item.commodity_name,
       price: item.price * 100,
       originPrice: item.price * 100,
-      tags: ['test'],
+      tags: [],
     });
   }
   return new Promise((resolve) => {

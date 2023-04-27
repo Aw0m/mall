@@ -1,6 +1,6 @@
 import Dialog from 'tdesign-miniprogram/dialog/index';
 import Toast from 'tdesign-miniprogram/toast/index';
-import { fetchCartGroupData, updateCartNum } from "../../services/cart/cart";
+import { fetchCartGroupData, updateCartNum } from '../../services/cart/cart';
 
 Page({
   data: {
@@ -10,6 +10,7 @@ Page({
   // 调用自定义tabbar的init函数，使页面与tabbar激活状态保持一致
   onShow() {
     this.getTabBar().init();
+    this.refreshData();
   },
 
   onLoad() {
@@ -96,7 +97,10 @@ Page({
   // 注：实际场景时应该调用接口获取购物车数据
   getCartGroupData() {
     const { cartGroupData } = this.data;
-    if (!cartGroupData) {
+    const app = getApp();
+    console.log('cartGroupData', cartGroupData);
+    if (!cartGroupData || app.globalData.needUpdateCart) {
+      app.globalData.needUpdateCart = false;
       return fetchCartGroupData();
     }
     return Promise.resolve({ data: cartGroupData });
@@ -198,7 +202,7 @@ Page({
     } = e.detail;
     // 加购数量超过库存数量
     // eslint-disable-next-line camelcase
-    updateCartNum({ cart_id: uid, quantity: quantity });
+    updateCartNum({ cart_id: uid, quantity: parseInt(quantity) });
     this.changeQuantityService({ spuId, skuId, quantity }).then(() => this.refreshData());
   },
 

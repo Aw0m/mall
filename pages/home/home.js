@@ -1,6 +1,7 @@
 import { fetchHome } from '../../services/home/home';
 import { fetchGoodsList } from '../../services/good/fetchGoods';
 import Toast from 'tdesign-miniprogram/toast/index';
+import { addToCart } from "../../services/good/addToCart";
 
 Page({
   data: {
@@ -113,12 +114,33 @@ Page({
     });
   },
   // 点击商品的详细
-  goodListAddCartHandle() {
+  async goodListAddCartHandle(e) {
+    const { goods } = e.detail;
+    const rsp = await addToCart({
+      // eslint-disable-next-line camelcase
+      commodity_id: goods.spuId,
+      // eslint-disable-next-line camelcase
+      commodity_num: 1,
+    });
+    if (rsp.message !== 'success') {
+      Toast({
+        context: this,
+        selector: '#t-toast',
+        message: `加入购物车失败`,
+        icon: '',
+        duration: 400,
+      });
+      return;
+    }
     Toast({
       context: this,
       selector: '#t-toast',
-      message: '点击加入购物车',
+      message: '加入购物车成功',
+      icon: '',
+      duration: 400,
     });
+    const app = getApp();
+    app.globalData.needUpdateCart = true;
   },
   // 搜索界面
   navToSearchPage() {

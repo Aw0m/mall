@@ -26,7 +26,6 @@
 // ];
 
 const images = [
-  'https://cdn-we-retail.ym.tencent.com/tsr/home/v2/banner1.png',
   'https://cdn-we-retail.ym.tencent.com/tsr/home/v2/banner2.png',
   'https://cdn-we-retail.ym.tencent.com/tsr/home/v2/banner3.png',
   'https://cdn-we-retail.ym.tencent.com/tsr/home/v2/banner4.png',

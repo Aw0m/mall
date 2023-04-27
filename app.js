@@ -5,4 +5,7 @@ App({
   onShow: function () {
     updateManager();
   },
+  globalData: {
+    needUpdateCart: false,
+  },
 });

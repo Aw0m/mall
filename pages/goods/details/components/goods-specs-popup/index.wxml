@@ -8,23 +8,7 @@
       <view class="popup-sku-header__goods-info">
         <view class="popup-sku__goods-name">{{title}}</view>
         <view class="goods-price-container">
-          <slot name="goods-price" />
         </view>
-        <!-- 已选规格 -->
-<!--        <view class="popup-sku__selected-spec">-->
-<!--          <view>选择：</view>-->
-<!--          <view wx:for="{{specList}}" wx:key="specId">-->
-<!--            <view-->
-<!--              class="popup-sku__selected-item"-->
-<!--              wx:for="{{item.specValueList}}"-->
-<!--              wx:for-item="selectedItem"-->
-<!--              wx:if="{{selectedItem.isSelected}}"-->
-<!--              wx:key="specValueId"-->
-<!--            >-->
-<!--              {{selectedItem.specValue}}-->
-<!--            </view>-->
-<!--          </view>-->
-<!--        </view>-->
       </view>
     </view>
     <view class="popup-sku-body">
