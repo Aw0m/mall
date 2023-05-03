@@ -1,6 +1,6 @@
 import Dialog from 'tdesign-miniprogram/dialog/index';
 import Toast from 'tdesign-miniprogram/toast/index';
-import { fetchCartGroupData, updateCartNum } from '../../services/cart/cart';
+import { deleteCart, fetchCartGroupData, updateCartNum } from '../../services/cart/cart';
 
 Page({
   data: {
@@ -228,13 +228,20 @@ Page({
 
   onGoodsDelete(e) {
     const {
-      goods: { spuId, skuId },
+      goods: { spuId, skuId, uid },
     } = e.detail;
     Dialog.confirm({
       content: '确认删除该商品吗?',
       confirmBtn: '确定',
       cancelBtn: '取消',
-    }).then(() => {
+    }).then(async () => {
+      const rsp = await deleteCart({
+        cart_id: uid,
+      });
+      if (rsp.message !== 'success') {
+        Toast({ context: this, selector: '#t-toast', message: '商品删除失败' });
+        return;
+      }
       this.deleteGoodsService({ spuId, skuId }).then(() => {
         Toast({ context: this, selector: '#t-toast', message: '商品删除成功' });
         this.refreshData();

@@ -91,3 +91,7 @@ export function getCartList(data) {
 export function updateCartNum(data) {
   return request(`/cart/update_cart_num`, data, 'POST', true);
 }
+
+export function deleteCart(data) {
+  return request('/cart/delete_cart', data, 'POST', true);
+}
