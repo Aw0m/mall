@@ -208,6 +208,8 @@ Page({
       icon: '',
       duration: 1000,
     });
+    const app = getApp();
+    app.globalData.needUpdateCart = true;
   },
 
   gotoBuy() {
