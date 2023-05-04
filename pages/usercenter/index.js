@@ -1,6 +1,7 @@
 import { fetchUserCenter } from '../../services/usercenter/fetchUsercenter';
 import Toast from 'tdesign-miniprogram/toast/index';
 import { isLogin } from '../../utils/auth';
+import { getOrderStatistics } from '../../services/usercenter/order';
 
 const menuData = [
   [
@@ -48,19 +49,19 @@ const orderTagInfos = [
     status: 1,
   },
   {
-    title: '待评价',
+    title: '已完成',
     iconName: 'comment',
     orderNum: 0,
     tabType: 60,
     status: 1,
   },
-  {
-    title: '退款/售后',
-    iconName: 'exchang',
-    orderNum: 0,
-    tabType: 0,
-    status: 1,
-  },
+  // {
+  //   title: '退款/售后',
+  //   iconName: 'exchang',
+  //   orderNum: 0,
+  //   tabType: 0,
+  //   status: 1,
+  // },
 ];
 
 const getDefaultData = () => ({
@@ -104,7 +105,7 @@ Page({
   },
 
   fetUseriInfoHandle() {
-    fetchUserCenter().then(({ userInfo, countsData, orderTagInfos: orderInfo, customerServiceInfo }) => {
+    fetchUserCenter().then(async ({ userInfo, countsData, orderTagInfos: orderInfo, customerServiceInfo }) => {
       // eslint-disable-next-line no-unused-expressions
       menuData?.[0].forEach((v) => {
         countsData.forEach((counts) => {
@@ -118,6 +119,14 @@ Page({
         ...v,
         ...orderInfo[index],
       }));
+      const rsp = await getOrderStatistics({});
+      if (rsp.message === 'success') {
+        const orderStatistics = rsp.rsp;
+        info[0].orderNum = orderStatistics.pending_num;
+        info[1].orderNum = orderStatistics.unshipped_num;
+        info[2].orderNum = orderStatistics.shipped_num;
+        info[3].orderNum = orderStatistics.completed_num;
+      }
       this.setData({
         userInfo,
         menuData,

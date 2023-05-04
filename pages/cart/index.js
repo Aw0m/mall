@@ -98,7 +98,7 @@ Page({
   getCartGroupData() {
     const { cartGroupData } = this.data;
     const app = getApp();
-    console.log('cartGroupData', cartGroupData);
+    // console.log('cartGroupData', cartGroupData);
     if (!cartGroupData || app.globalData.needUpdateCart) {
       app.globalData.needUpdateCart = false;
       return fetchCartGroupData();
