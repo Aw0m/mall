@@ -1,5 +1,6 @@
 import { config } from '../../config/index';
 import { mockIp, mockReqId } from '../../utils/mock';
+import { request } from "../../utils/request";
 
 /** 获取结算mock数据 */
 function mockFetchSettleDetail(params) {
@@ -66,4 +67,8 @@ export function dispatchSupplementInvoice() {
   return new Promise((resolve) => {
     resolve('real api');
   });
+}
+
+export function createOrder(data) {
+  return request(`/order/create_order`, data, 'POST', true);
 }

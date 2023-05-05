@@ -260,6 +260,8 @@ Page({
   },
 
   onToSettle() {
+
+    console.log('cart toBuyNow 23432e:',this.data);
     const goodsRequestList = [];
     this.data.cartGroupData.storeGoods.forEach((store) => {
       store.promotionGoodsList.forEach((promotion) => {
@@ -270,6 +272,7 @@ Page({
         });
       });
     });
+    console.log(goodsRequestList);
     wx.setStorageSync('order.goodsRequestList', JSON.stringify(goodsRequestList));
     wx.navigateTo({ url: '/pages/order/order-confirm/index?type=cart' });
   },

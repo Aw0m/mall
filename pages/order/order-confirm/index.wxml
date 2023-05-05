@@ -3,7 +3,6 @@
 <wxs module="handleInvoice" src="./handleInvoice.wxs" />
 <wxs module="getNotes" src="./getNotes.wxs" />
 <view class="order-sure" wx:if="{{!loading}}">
-  <address-card addressData="{{userAddress}}" bind:addclick="onGotoAddress" bind:addressclick="onGotoAddress" />
   <view
     class="order-wrapper"
     wx:for="{{settleDetailData.storeGoodsList}}"
@@ -11,10 +10,10 @@
     wx:for-index="storeIndex"
     wx:key="storeIndex"
   >
-    <view class="store-wrapper">
-      <t-icon prefix="wr" size="40rpx" color="#333333" name="store" class="store-logo" />
-      {{stores.storeName}}
-    </view>
+<!--    <view class="store-wrapper">-->
+<!--      <t-icon prefix="wr" size="40rpx" color="#333333" name="store" class="store-logo" />-->
+<!--      {{stores.storeName}}-->
+<!--    </view>-->
     <view
       wx:if="{{orderCardList[storeIndex].goodsList.length > 0}}"
       wx:for="{{orderCardList[storeIndex].goodsList}}"
@@ -105,7 +104,7 @@
   <view class="wx-pay-cover">
     <view class="wx-pay">
       <price decimalSmaller fill class="price" price="{{settleDetailData.totalPayAmount || '0'}}" />
-      <view class="submit-btn {{ settleDetailData.settleType === 1 ? '':'btn-gray'}}" bindtap="submitOrder">
+      <view class="submit-btn {{''}}" bindtap="submitOrder">
         提交订单
       </view>
     </view>
