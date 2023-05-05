@@ -32,6 +32,7 @@ export async function fetchCartGroupData() {
       totalPrice += price * commodityNum;
       goodsPromotionList.push({
         uid: carCommodity.cart.cart_id,
+        cartId: carCommodity.cart.cart_id,
         storeName: storeName,
         storeId: storeId,
         spuId: carCommodity.commodity.commodity_id,

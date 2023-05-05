@@ -4,32 +4,6 @@
     <view class="header">
       <view class="order-detail__header">
         <view class="title">{{_order.statusDesc}}</view>
-        <view class="desc">
-          <block wx:if="{{ order.holdStatus === 1 }}">
-            <block wx:if="{{ order.groupInfoVo.residueTime > 0 }}">
-              拼团剩余
-              <t-count-down
-                time="{{order.groupInfoVo.residueTime}}"
-                format="HH小时mm分ss秒"
-                t-class="count-down"
-                bindfinish="onCountDownFinish"
-              />
-              <view>过时自动取消</view>
-            </block>
-          </block>
-          <block wx:elif="{{countDownTime === null}}">{{order.orderSatusRemark || ''}}</block>
-          <block wx:elif="{{countDownTime > 0}}">
-            剩
-            <t-count-down
-              time="{{countDownTime}}"
-              format="HH小时mm分ss秒"
-              t-class="count-down"
-              bindfinish="onCountDownFinish"
-            />
-            支付，过时订单将会取消
-          </block>
-          <block wx:else>超时未支付</block>
-        </view>
       </view>
 
       <!-- 物流 -->
@@ -145,10 +119,6 @@
         </view>
       </view>
       <view class="border-bottom border-bottom-margin" />
-      <view class="pay-service" wx:if="{{storeDetail && storeDetail.storeTel}}" catch:tap="clickService">
-        <t-icon name="service" size="40rpx" />
-        <text decode="{{true}}">&nbsp;联系客服</text>
-      </view>
     </view>
   </view>
   <view wx:if="{{_order.buttons.length > 0}}" class="bottom-bar">

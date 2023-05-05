@@ -1,7 +1,8 @@
 import Toast from 'tdesign-miniprogram/toast/index';
-import { createOrder, fetchSettleDetail } from '../../../services/order/orderConfirm';
+import { confirmOrder, createOrder, fetchSettleDetail } from '../../../services/order/orderConfirm';
 import { commitPay, wechatPayOrder } from './pay';
 import { getAddressPromise } from '../../usercenter/address/list/util';
+import { deleteCart } from "../../../services/cart/cart";
 
 const stripeImg = `https://cdn-we-retail.ym.tencent.com/miniapp/order/stripe.png`;
 
@@ -41,7 +42,8 @@ Page({
     currentStoreId: null, //当前优惠券storeId
     userAddress: null,
   },
-
+  orderIdList: [],
+  cartIdList: [],
   payLock: false,
   noteInfo: [],
   tempNoteInfo: [],
@@ -84,6 +86,14 @@ Page({
       // 从购物车跳转过来时，获取传入的商品列表数据
       const goodsRequestListJson = wx.getStorageSync('order.goodsRequestList');
       goodsRequestList = JSON.parse(goodsRequestListJson);
+      // 获取准备购买的商品的cartId
+      this.cartIdList = [];
+      for (let i = 0; i < goodsRequestList.length; i++) {
+        const good = goodsRequestList[i];
+        if (good.cartId !== '') {
+          this.cartIdList.push(good.cartId);
+        }
+      }
     } else if (typeof options.goodsRequestList === 'string') {
       goodsRequestList = JSON.parse(options.goodsRequestList);
     }
@@ -243,14 +253,13 @@ Page({
     const orderCommodityInfoList = [];
     for (let i = 0; i < orderCardList.length; i++) {
       const item = orderCardList[i];
-      const {goodsList} = item;
-      console.log('item:', item);
+      const { goodsList } = item;
       for (let j = 0; j < goodsList.length; j++) {
         const good = goodsList[j];
         orderCommodityInfoList.push({
           commodity_id: good.spuId,
           quantity: good.num,
-        })
+        });
       }
     }
     console.log('orderCommodityInfoList:', orderCommodityInfoList);
@@ -265,6 +274,23 @@ Page({
         });
         wx.navigateBack();
         return;
+      }
+      for (let i = 0; i < this.cartIdList.length; i++) {
+        const cartId = this.cartIdList[i];
+        console.log('cartId:', cartId);
+        deleteCart({
+          cart_id: cartId,
+        }).then((res) => {
+          if (res.message === 'success') {
+            const app = getApp();
+            app.globalData.needUpdateCart = true;
+          }
+        });
+      }
+      const ordersList = res.rsp.orders_list;
+      for (let i = 0; i < ordersList.length; i++) {
+        const orderItem = ordersList[i];
+        this.orderIdList.push(orderItem.order_id);
       }
       Toast({
         context: this,
@@ -408,28 +434,50 @@ Page({
     console.log('this.data.orderCardList:', this.data.orderCardList);
     console.log('this.data:', this.data);
     commitPay(params).then(
-      (res) => {
+      async (res) => {
         this.payLock = false;
         const { data } = res;
         // // 提交出现 失效 不在配送范围 限购的商品 提示弹窗
         // if (this.isInvalidOrder(data)) {
         //   return;
         // }
-        if (res.code === 'Success') {
-          this.handlePay(data, settleDetailData);
-        } else {
-          Toast({
-            context: this,
-            selector: '#t-toast',
-            message: res.msg || '提交订单超时，请稍后重试',
-            duration: 2000,
-            icon: '',
+        console.log('this.orderIdList:', this.orderIdList);
+        for (let i = 0; i < this.orderIdList.length; i++) {
+          const orderId = this.orderIdList[i];
+          const res = await confirmOrder({
+            order_id: orderId,
           });
-          setTimeout(() => {
-            // 提交支付失败   返回购物车
-            wx.navigateBack();
-          }, 2000);
+          if (res.message !== 'success') {
+            Toast({
+              context: this,
+              selector: '#t-toast',
+              message: res.msg || '提交订单超时，请稍后重试',
+              duration: 2000,
+              icon: '',
+            });
+            setTimeout(() => {
+              // 提交支付失败   返回购物车
+              wx.navigateBack();
+            }, 2000);
+          } else {
+            this.handlePay(data, settleDetailData);
+          }
         }
+        // if (res.code === 'Success') {
+        //   this.handlePay(data, settleDetailData);
+        // } else {
+        //   Toast({
+        //     context: this,
+        //     selector: '#t-toast',
+        //     message: res.msg || '提交订单超时，请稍后重试',
+        //     duration: 2000,
+        //     icon: '',
+        //   });
+        //   setTimeout(() => {
+        //     // 提交支付失败   返回购物车
+        //     wx.navigateBack();
+        //   }, 2000);
+        // }
       },
       (err) => {
         this.payLock = false;

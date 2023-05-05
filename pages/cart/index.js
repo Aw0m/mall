@@ -272,7 +272,6 @@ Page({
         });
       });
     });
-    console.log(goodsRequestList);
     wx.setStorageSync('order.goodsRequestList', JSON.stringify(goodsRequestList));
     wx.navigateTo({ url: '/pages/order/order-confirm/index?type=cart' });
   },

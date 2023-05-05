@@ -1,6 +1,9 @@
 import Toast from 'tdesign-miniprogram/toast/index';
 import Dialog from 'tdesign-miniprogram/dialog/index';
 import { OrderButtonTypes } from '../../config';
+import { cancelOrder } from "../../../../services/order/orderDetail";
+import { confirmOrder, orderReceipt } from "../../../../services/order/orderConfirm";
+import { wechatPayOrder } from "../../order-confirm/pay";
 
 Component({
   options: {
@@ -85,6 +88,7 @@ Component({
     // 点击【订单操作】按钮，根据按钮类型分发
     onOrderBtnTap(e) {
       const { type } = e.currentTarget.dataset;
+      console.log('onOrderBtnTap type:', type);
       switch (type) {
         case OrderButtonTypes.DELETE:
           this.onDelete(this.data.order);
@@ -115,29 +119,66 @@ Component({
       }
     },
 
-    onCancel() {
-      Toast({
-        context: this,
-        selector: '#t-toast',
-        message: '你点击了取消订单',
-        icon: 'check-circle',
-      });
+    onCancel(e) {
+      const { orderNo } = e;
+      Dialog.confirm({
+        title: '确认是否放弃支付订单？',
+        content: '',
+        confirmBtn: '确认',
+        cancelBtn: '取消',
+      })
+        .then(async () => {
+          const rsp = await cancelOrder({
+            order_id: orderNo,
+          });
+          if (rsp.message !== 'success') {
+            Toast({
+              context: this,
+              selector: '#t-toast',
+              message: '取消订单失败',
+              icon: 'check-circle',
+            });
+            return;
+          }
+          Toast({
+            context: this,
+            selector: '#t-toast',
+            message: '取消支付成功',
+            icon: 'check-circle',
+          });
+          await wx.navigateTo({ url: '/pages/order/order-list/index' });
+        })
+        .catch(() => {});
     },
 
-    onConfirm() {
+    onConfirm(e) {
+      const { orderNo } = e;
       Dialog.confirm({
         title: '确认是否已经收到货？',
         content: '',
         confirmBtn: '确认收货',
         cancelBtn: '取消',
       })
-        .then(() => {
+        .then(async () => {
+          const rsp = await orderReceipt({
+            order_id: orderNo,
+          });
+          if (rsp.message !== 'success') {
+            Toast({
+              context: this,
+              selector: '#t-toast',
+              message: '确认收货失败',
+              icon: 'check-circle',
+            });
+            return;
+          }
           Toast({
             context: this,
             selector: '#t-toast',
-            message: '你确认了确认收货',
+            message: '确认收货成功',
             icon: 'check-circle',
           });
+          await wx.navigateTo({ url: '/pages/order/order-list/index' });
         })
         .catch(() => {
           Toast({
@@ -149,13 +190,41 @@ Component({
         });
     },
 
-    onPay() {
-      Toast({
-        context: this,
-        selector: '#t-toast',
-        message: '你点击了去支付',
-        icon: 'check-circle',
-      });
+    onPay(e) {
+      const { orderNo, totalAmount } = e;
+      Dialog.confirm({
+        title: '确认是否支付订单？',
+        content: '',
+        confirmBtn: '确认',
+        cancelBtn: '取消',
+      })
+        .then(async () => {
+          const rsp = await confirmOrder({
+            order_id: orderNo,
+          });
+          if (rsp.message !== 'success') {
+            Toast({
+              context: this,
+              selector: '#t-toast',
+              message: '支付订单失败',
+              icon: 'check-circle',
+            });
+            return;
+          }
+          Toast({
+            context: this,
+            selector: '#t-toast',
+            message: '支付成功',
+            icon: 'check-circle',
+          });
+
+          const payOrderInfo = {
+            orderId: orderNo,
+            payAmt: totalAmount,
+          };
+          await wechatPayOrder(payOrderInfo);
+        })
+        .catch(() => {});
     },
 
     onBuyAgain() {

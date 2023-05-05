@@ -72,3 +72,11 @@ export function dispatchSupplementInvoice() {
 export function createOrder(data) {
   return request(`/order/create_order`, data, 'POST', true);
 }
+
+export function confirmOrder(data) {
+  return request(`/order/confirm_order`, data, 'POST', true);
+}
+
+export function orderReceipt(data) {
+  return request(`/order/order_receipt`, data, 'POST', true);
+}
