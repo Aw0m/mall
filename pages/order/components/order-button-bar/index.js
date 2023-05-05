@@ -88,7 +88,6 @@ Component({
     // 点击【订单操作】按钮，根据按钮类型分发
     onOrderBtnTap(e) {
       const { type } = e.currentTarget.dataset;
-      console.log('onOrderBtnTap type:', type);
       switch (type) {
         case OrderButtonTypes.DELETE:
           this.onDelete(this.data.order);

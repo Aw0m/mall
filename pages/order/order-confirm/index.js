@@ -262,7 +262,6 @@ Page({
         });
       }
     }
-    console.log('orderCommodityInfoList:', orderCommodityInfoList);
     createOrder({
       order_commodity_info_list: orderCommodityInfoList,
     }).then((res) => {
@@ -277,7 +276,6 @@ Page({
       }
       for (let i = 0; i < this.cartIdList.length; i++) {
         const cartId = this.cartIdList[i];
-        console.log('cartId:', cartId);
         deleteCart({
           cart_id: cartId,
         }).then((res) => {
@@ -431,8 +429,6 @@ Page({
     if (invoiceData && invoiceData.email) {
       params.invoiceRequest = invoiceData;
     }
-    console.log('this.data.orderCardList:', this.data.orderCardList);
-    console.log('this.data:', this.data);
     commitPay(params).then(
       async (res) => {
         this.payLock = false;
@@ -441,7 +437,6 @@ Page({
         // if (this.isInvalidOrder(data)) {
         //   return;
         // }
-        console.log('this.orderIdList:', this.orderIdList);
         for (let i = 0; i < this.orderIdList.length; i++) {
           const orderId = this.orderIdList[i];
           const res = await confirmOrder({

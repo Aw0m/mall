@@ -305,7 +305,6 @@ Component({
     },
 
     addCart() {
-      console.log('this.data.buyNum:', this.data.buyNum);
       const { isStock } = this.properties;
       if (!isStock) return;
       this.triggerEvent('addCart', { buyNum: this.data.buyNum }, {});

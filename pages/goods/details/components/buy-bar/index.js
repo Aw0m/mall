@@ -46,10 +46,10 @@ Component({
     toAddCart() {
       this.triggerEvent('toAddCart');
     },
-
-    toBuyNow(e) {
-      this.triggerEvent('toBuyNow', e);
-    },
+    //
+    // toBuyNow(e) {
+    //   this.triggerEvent('toBuyNow', e);
+    // },
 
     toNav(e) {
       const { url } = e.currentTarget.dataset;

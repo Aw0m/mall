@@ -33,7 +33,6 @@ Page({
       () => {
         updateInfo()
           .then((res) => {
-            console.log(res);
             this.userInfo = res.rsp.user;
             setUserInfo(this.userInfo);
             wx.navigateBack({ backRefresh: true });

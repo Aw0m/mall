@@ -48,7 +48,7 @@ export function genSettleDetail(params) {
       totalAmount: '289997',
       totalPayAmount: '',
       totalDiscountAmount: '110000',
-      totalPromotionAmount: '1100',
+      totalPromotionAmount: '0',
       totalCouponAmount: '0',
       totalSalePrice: '289997',
       totalGoodsAmount: '289997',

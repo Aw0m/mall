@@ -260,8 +260,6 @@ Page({
   },
 
   onToSettle() {
-
-    console.log('cart toBuyNow 23432e:',this.data);
     const goodsRequestList = [];
     this.data.cartGroupData.storeGoods.forEach((store) => {
       store.promotionGoodsList.forEach((promotion) => {

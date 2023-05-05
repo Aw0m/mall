@@ -81,7 +81,6 @@ Page({
       parameter: this.orderNo,
     };
     return fetchOrderDetail(params).then((res) => {
-    console.log('res:',res);
       const order = res.data;
       const _order = {
         id: order.orderId,
